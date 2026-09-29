@@ -46,6 +46,7 @@ def get_joint_angles_from_activation(left_activation: list,
 
     assert len(left_activation) == len(right_activation), \
         "左右の活性度リストの長さが一致していません"
+    
 
     joint_angles = []
 
@@ -55,6 +56,7 @@ def get_joint_angles_from_activation(left_activation: list,
 
         # 差を角度に変換（-max_bend ～ +max_bend）
         angle = diff * max_bend
+        # 活性度を0.01~1.0の範囲にしてスケールするようなイメーじ
 
         joint_angles.append(angle)
 
@@ -119,10 +121,12 @@ def forward_kinematics(joint_angles: list,
         # ラジアンに変換（math.cos/sin はラジアンを使う）
         angle_rad = math.radians(current_angle)
 
+        # んでここも正規化したsin/cosをスケールして計算していると
         # その方向に segment_length だけ移動
         x += segment_length * math.cos(angle_rad)
         y += segment_length * math.sin(angle_rad)
 
+        # パスを記録するよね
         # この位置を記録
         positions.append((x, y))
 
